@@ -1,13 +1,13 @@
 // lib/widgets/custom_app_bar.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Untuk logout
-import 'package:simrs/layar_login.dart'; // Untuk kembali ke halaman login setelah logout
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simrs/layar_login.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(60.0); // Tinggi AppBar kustom
+  Size get preferredSize => const Size.fromHeight(60.0);
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +15,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       backgroundColor: biruUtama,
-      elevation: 0, // Hapus bayangan default AppBar
+      elevation: 0,
       flexibleSpace: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             children: [
-              Image.asset(
-                'assets/logo.png', // Pastikan path ini benar!
-                height: 40,
-              ),
+              Image.asset('assets/logo.png', height: 40),
               const SizedBox(width: 10),
               const Expanded(
                 child: Column(
@@ -61,55 +58,47 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 endIndent: 10,
                 width: 20,
               ),
-              // --- PERUBAHAN UTAMA DI SINI: GANTI DENGAN PopupMenuButton ---
               PopupMenuButton<int>(
                 icon: const CircleAvatar(
                   backgroundColor: Colors.white,
                   child: Icon(Icons.person, color: biruUtama),
                 ),
-                offset: const Offset(
-                  0,
-                  50,
-                ), // Geser menu sedikit ke bawah agar tidak menutupi ikon
-                color: Colors.white, // Latar belakang menu putih
+                offset: const Offset(0, 50),
+                color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Sudut melengkung
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                elevation: 8, // Tambah bayangan
+                elevation: 8,
                 onSelected: (item) async {
                   if (item == 1) {
-                    // Logika untuk tombol "Keluar"
                     final prefs = await SharedPreferences.getInstance();
-                    await prefs.setBool(
-                      'isLoggedIn',
-                      false,
-                    ); // Set status logout
+                    await prefs.setBool('isLoggedIn', false);
 
-                    // Kembali ke halaman login
+                    // Cek mounted sebelum menggunakan context setelah async gap
+                    if (!context.mounted) return; // Menggunakan context.mounted
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const LayarLogin(),
                       ),
-                      (Route<dynamic> route) =>
-                          false, // Hapus semua route sebelumnya
+                      (Route<dynamic> route) => false,
                     );
+                    // Cek mounted sebelum menggunakan context setelah async gap
+                    if (!context.mounted) return; // Menggunakan context.mounted
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Anda telah keluar.')),
                     );
                   }
-                  // Jika ada item lain, bisa ditambahkan logika di sini
                 },
                 itemBuilder: (context) => [
-                  // Item 1: Informasi Pengguna (tanpa value, hanya sebagai header)
                   PopupMenuItem<int>(
-                    value: 0, // Nilai dummy, tidak akan diselect
-                    enabled: false, // Tidak bisa diklik
+                    value: 0,
+                    enabled: false,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Indira Kalista', // NAMA USER
+                          'Indira Kalista',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -117,7 +106,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ),
                         Text(
-                          'Admin Pendaftaran', // JABATAN USER
+                          'Admin Pendaftaran',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[700],
@@ -126,10 +115,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
-                  const PopupMenuDivider(), // Garis pemisah
-                  // Item 2: Tombol Keluar
+                  const PopupMenuDivider(),
                   const PopupMenuItem<int>(
-                    value: 1, // Nilai untuk tombol Keluar
+                    value: 1,
                     child: Row(
                       children: [
                         Icon(Icons.logout, color: Colors.red),
@@ -140,7 +128,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               ),
-              // --- AKHIR PERUBAHAN ---
             ],
           ),
         ),

@@ -1,7 +1,11 @@
-// lib/LayarLogin.dart
+// lib/layar_login.dart
 import 'package:flutter/material.dart';
-import 'package:simrs/beranda.dart'; // Kembali import Beranda
+import 'package:simrs/beranda.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// Jika ingin menggunakan logging framework, tambahkan import di sini, contoh:
+// import 'package:logger/logger.dart';
+
+// final logger = Logger(); // Inisialisasi logger
 
 class LayarLogin extends StatefulWidget {
   const LayarLogin({super.key});
@@ -28,23 +32,29 @@ class _LayarLoginState extends State<LayarLogin> {
       String email = _emailController.text;
       String password = _passwordController.text;
 
+      // Cek mounted sebelum menggunakan context
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Mencoba masuk dengan $email...')));
 
       await Future.delayed(const Duration(seconds: 2));
 
+      // Cek mounted setelah await dan sebelum menggunakan context
+      if (!mounted) return;
       if (email == 'user@example.com' && password == 'password123') {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
 
-        // --- KEMBALI MENGGUNAKAN MATERIALPAGE_ROUTE ---
+        // Cek mounted sebelum menggunakan context
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Beranda()),
         );
-        // --- AKHIR KEMBALI ---
       } else {
+        // Cek mounted sebelum menggunakan context
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Email atau kata sandi salah!')),
         );
@@ -203,7 +213,7 @@ class _LayarLoginState extends State<LayarLogin> {
                             prefixIcon: const Icon(
                               Icons.vpn_key_outlined,
                               color: Colors.grey,
-                            ), // ikon kunci
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _kataSandiTerlihat
@@ -249,7 +259,8 @@ class _LayarLoginState extends State<LayarLogin> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              print('Lupa kata sandi ditekan');
+                              // Menggunakan debugPrint() sebagai ganti print()
+                              debugPrint('Lupa kata sandi ditekan');
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,
@@ -297,7 +308,8 @@ class _LayarLoginState extends State<LayarLogin> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                print('Daftar disini ditekan');
+                                // Menggunakan debugPrint() sebagai ganti print()
+                                debugPrint('Daftar disini ditekan');
                               },
                               child: const Text(
                                 'Daftar disini',

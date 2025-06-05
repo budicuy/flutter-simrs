@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:simrs/widgets/custom_app_bar.dart';
 import 'package:simrs/widgets/custom_bottom_nav_bar.dart';
-
-// Import halaman-halaman lain untuk navigasi BottomNavBar
 import 'package:simrs/beranda.dart';
 import 'package:simrs/halaman_pasien.dart';
 import 'package:simrs/halaman_layanan.dart';
@@ -16,10 +14,9 @@ class HalamanPendaftaran extends StatefulWidget {
 }
 
 class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
-  int _selectedIndex =
-      1; // Sesuaikan dengan indeks item ini di navbar (Pendaftaran adalah index 1)
+  int _selectedIndex = 1;
 
-  // Data dummy untuk tabel pendaftaran hari ini
+  // Data dummy dikembalikan ke sini
   final List<Map<String, dynamic>> _dataPendaftaranHariIni = [
     {
       'no': 1,
@@ -28,10 +25,8 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
       'status': 'Menunggu',
     },
     {'no': 2, 'no_regis': '002', 'nama_pasien': 'Putri', 'status': 'Selesai'},
-    // Tambahkan data lainnya sesuai kebutuhan
   ];
 
-  // Data dummy untuk tabel pendaftaran riwayat (Contoh saja)
   final List<Map<String, dynamic>> _dataPendaftaranRiwayat = [
     {
       'no': 1,
@@ -54,21 +49,27 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
       });
       switch (index) {
         case 0:
+          // Cek mounted sebelum menggunakan context setelah async gap
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const Beranda()),
           );
           break;
         case 1:
-          // Sudah di halaman ini
+          // Tetap di halaman Pendaftaran
           break;
         case 2:
+          // Cek mounted sebelum menggunakan context setelah async gap
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HalamanPasien()),
           );
           break;
         case 3:
+          // Cek mounted sebelum menggunakan context setelah async gap
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HalamanLayanan()),
@@ -84,14 +85,17 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
     const Color biruTeks = Color(0xFF0D47A1);
 
     return Scaffold(
-      appBar: const CustomAppBar(), // Menggunakan AppBar kustom
+      backgroundColor: Colors.grey[100],
+      appBar: const CustomAppBar(),
       body: DefaultTabController(
-        // Menggunakan DefaultTabController untuk tab
-        length: 2, // Ada 2 tab: Hari ini & Riwayat
+        length: 2,
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -105,11 +109,11 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Aksi ketika tombol "Tambah" diklik
+                      // Cek mounted sebelum menggunakan context setelah async gap
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Tombol Tambah diklik!')),
                       );
-                      // Contoh: Navigator.push(context, MaterialPageRoute(builder: (context) => const FormPendaftaranBaru()));
                     },
                     icon: const Icon(Icons.add, size: 24),
                     label: const Text('Tambah', style: TextStyle(fontSize: 16)),
@@ -123,27 +127,27 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      elevation: 4,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
-            // TabBar
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.all(4.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200], // Latar belakang tab
+                color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
                 indicator: BoxDecoration(
-                  color: biruUtama, // Warna indikator tab yang aktif
-                  borderRadius: BorderRadius.circular(10),
+                  color: biruUtama,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                labelColor: Colors.white, // Warna teks tab aktif
-                unselectedLabelColor:
-                    Colors.black54, // Warna teks tab tidak aktif
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black54,
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 tabs: const [
                   Tab(text: 'Hari ini'),
@@ -152,14 +156,13 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Search Bar dan Filter
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
+                      height: 50,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -182,10 +185,11 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none, // Hapus border default
+                            borderSide: BorderSide.none,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12,
+                            vertical: 0,
+                            horizontal: 10,
                           ),
                         ),
                       ),
@@ -193,6 +197,8 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
                   ),
                   const SizedBox(width: 10),
                   Container(
+                    width: 50,
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -207,8 +213,10 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.filter_list, color: Colors.grey),
+                      iconSize: 24,
                       onPressed: () {
-                        // Aksi ketika tombol filter diklik
+                        // Cek mounted sebelum menggunakan context setelah async gap
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Tombol Filter diklik!'),
@@ -221,17 +229,15 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // TabBarView untuk menampilkan konten tab
             Expanded(
               child: TabBarView(
                 children: [
                   _buildPendaftaranList(
                     _dataPendaftaranHariIni,
-                  ), // Konten "Hari ini"
+                  ), // Menggunakan data Hari Ini
                   _buildPendaftaranList(
                     _dataPendaftaranRiwayat,
-                  ), // Konten "Riwayat"
+                  ), // Menggunakan data Riwayat
                 ],
               ),
             ),
@@ -245,19 +251,24 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
     );
   }
 
-  // Widget pembantu untuk membangun daftar pendaftaran (tabel)
+  // _buildPendaftaranList dikembalikan ke sini
   Widget _buildPendaftaranList(List<Map<String, dynamic>> data) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical, // Scroll vertikal
+      scrollDirection: Axis.vertical,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal, // Scroll horizontal jika tabel lebar
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width - 32,
+          ),
           child: DataTable(
-            columnSpacing: 16, // Jarak antar kolom
+            columnSpacing:
+                0, // <--- PERUBAHAN DI SINI! Set ke 0 untuk menghilangkan jarak
             dataRowMinHeight: 48,
             dataRowMaxHeight: 56,
             headingRowHeight: 56,
+            horizontalMargin: 0, // Tetap 0 agar tidak ada margin di luar
+            headingRowColor: MaterialStateProperty.all(Colors.grey.shade50),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -272,38 +283,46 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
             ),
             columns: const [
               DataColumn(
-                label: Text(
-                  'No',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                label: Center(
+                  child: Text(
+                    'No',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ),
               DataColumn(
-                label: Text(
-                  'No. Regis',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                label: Center(
+                  child: Text(
+                    'No. Regis',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ),
               DataColumn(
-                label: Text(
-                  'Nama Pasien',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                label: Center(
+                  child: Text(
+                    'Nama Pasien',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ),
               DataColumn(
-                label: Text(
-                  'Status',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                label: Center(
+                  child: Text(
+                    'Status',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ),
@@ -312,19 +331,23 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
                 .map(
                   (item) => DataRow(
                     cells: [
-                      DataCell(Text(item['no'].toString())),
-                      DataCell(Text(item['no_regis'])),
-                      DataCell(Text(item['nama_pasien'])),
+                      DataCell(Center(child: Text(item['no'].toString()))),
+                      DataCell(Center(child: Text(item['no_regis']))),
+                      DataCell(Center(child: Text(item['nama_pasien']))),
                       DataCell(
-                        Row(
-                          children: [
-                            _buildStatusChip(item['status']),
-                            const SizedBox(width: 8),
-                            const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.grey,
-                            ), // Ikon panah bawah
-                          ],
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildStatusChip(item['status']),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -337,23 +360,23 @@ class _HalamanPendaftaranState extends State<HalamanPendaftaran> {
     );
   }
 
-  // Widget pembantu untuk menampilkan chip status
+  // _buildStatusChip dikembalikan ke sini
   Widget _buildStatusChip(String status) {
     Color textColor;
     Color backgroundColor;
 
     switch (status) {
       case 'Menunggu':
-        textColor = const Color(0xFFF9A825); // Kuning
-        backgroundColor = const Color(0xFFFFF8E1); // Kuning muda
+        textColor = const Color(0xFFF9A825);
+        backgroundColor = const Color(0xFFFFF8E1);
         break;
       case 'Selesai':
-        textColor = const Color(0xFF4CAF50); // Hijau
-        backgroundColor = const Color(0xFFE8F5E9); // Hijau muda
+        textColor = const Color(0xFF4CAF50);
+        backgroundColor = const Color(0xFFE8F5E9);
         break;
       case 'Batal':
-        textColor = const Color(0xFFEF5350); // Merah
-        backgroundColor = const Color(0xFFFFEBEE); // Merah muda
+        textColor = const Color(0xFFEF5350);
+        backgroundColor = const Color(0xFFFFEBEE);
         break;
       default:
         textColor = Colors.grey;

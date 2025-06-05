@@ -1,10 +1,7 @@
 // lib/beranda.dart
 import 'package:flutter/material.dart';
-// Import widget kustom yang baru dibuat
-import 'package:simrs/widgets/custom_app_bar.dart'; // Sesuaikan path ini
-import 'package:simrs/widgets/custom_bottom_nav_bar.dart'; // Sesuaikan path ini
-
-// Kita perlu import semua halaman yang akan dinavigasi dari sini
+import 'package:simrs/widgets/custom_app_bar.dart';
+import 'package:simrs/widgets/custom_bottom_nav_bar.dart';
 import 'package:simrs/halaman_pendaftaran.dart';
 import 'package:simrs/halaman_pasien.dart';
 import 'package:simrs/halaman_layanan.dart';
@@ -17,47 +14,44 @@ class Beranda extends StatefulWidget {
 }
 
 class _BerandaState extends State<Beranda> {
-  // Data dummy untuk statistik (bisa diubah sesuai data dari API)
   final List<Map<String, dynamic>> _statistikData = [
     {
       'judul': 'Pendaftaran',
       'jumlah': 50,
-      'ikon': Icons.description, // Icon dari gambar mirip dokumen
-      'warnaIkon': const Color(0xFFF9A825), // Kuning
+      'ikon': Icons.description,
+      'warnaIkon': const Color(0xFFF9A825),
     },
     {
       'judul': 'Pasien',
       'jumlah': 150,
       'ikon': Icons.person,
-      'warnaIkon': const Color(0xFF81D4FA), // Biru muda
+      'warnaIkon': const Color(0xFF81D4FA),
     },
     {
       'judul': 'Poli',
       'jumlah': 30,
-      'ikon': Icons.local_hospital, // Icon mirip topi suster
-      'warnaIkon': const Color(0xFFEF9A9A), // Merah muda
+      'ikon': Icons.local_hospital,
+      'warnaIkon': const Color(0xFFEF9A9A),
     },
     {
       'judul': 'Dokter',
       'jumlah': 30,
-      'ikon': Icons.people, // Icon mirip grup orang
-      'warnaIkon': const Color(0xFF4DB6AC), // Hijau toska
+      'ikon': Icons.people,
+      'warnaIkon': const Color(0xFF4DB6AC),
     },
   ];
 
-  int _selectedIndex = 0; // Kembali dikelola di sini
+  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    // Logika navigasi kembali di sini dengan MaterialPageRoute
     switch (index) {
       case 0:
-        // Beranda (sudah di sini)
-        // Kita tidak perlu pushReplacement ke Beranda lagi jika sudah di Beranda
         if (ModalRoute.of(context)?.settings.name != '/') {
-          // Jika bukan di root (home)
+          // Cek mounted sebelum menggunakan context setelah async gap
+          if (!mounted) return;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const Beranda()),
@@ -65,18 +59,24 @@ class _BerandaState extends State<Beranda> {
         }
         break;
       case 1:
+        // Cek mounted sebelum menggunakan context setelah async gap
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HalamanPendaftaran()),
         );
         break;
       case 2:
+        // Cek mounted sebelum menggunakan context setelah async gap
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HalamanPasien()),
         );
         break;
       case 3:
+        // Cek mounted sebelum menggunakan context setelah async gap
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HalamanLayanan()),
@@ -94,7 +94,9 @@ class _BerandaState extends State<Beranda> {
         '${_getDayName(now.weekday)}, ${now.day} ${_getMonthName(now.month)} ${now.year}';
 
     return Scaffold(
-      appBar: const CustomAppBar(), // AppBar tetap reusable
+      backgroundColor:
+          Colors.grey[100], // Sesuaikan dengan warna yang kamu inginkan
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -115,8 +117,6 @@ class _BerandaState extends State<Beranda> {
                 style: TextStyle(fontSize: 18, color: Colors.black87),
               ),
               const SizedBox(height: 20),
-
-              // Kotak Data Hari Ini
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
@@ -128,10 +128,13 @@ class _BerandaState extends State<Beranda> {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      // Perbaikan: Ganti withOpacity
+                      color: const Color(0xFF000000).withAlpha(
+                        (0.2 * 255).round(),
+                      ), // 0x33000000, 20% opacity of black
                       spreadRadius: 1,
                       blurRadius: 5,
-                      offset: const Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -145,8 +148,6 @@ class _BerandaState extends State<Beranda> {
                 ),
               ),
               const SizedBox(height: 25),
-
-              // Grid untuk Statistik (Pendaftaran, Pasien, Poli, Dokter)
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -173,7 +174,6 @@ class _BerandaState extends State<Beranda> {
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(
-        // BottomNavBar tetap reusable
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
@@ -192,6 +192,8 @@ class _BerandaState extends State<Beranda> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
         onTap: () {
+          // Cek mounted sebelum menggunakan context setelah async gap
+          if (!mounted) return;
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text('Anda menekan $title')));
