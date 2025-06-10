@@ -42,7 +42,7 @@ class _LayarLoginState extends State<LayarLogin> {
 
       // Cek mounted setelah await dan sebelum menggunakan context
       if (!mounted) return;
-      if (email == 'user@example.com' && password == 'password123') {
+      if (email == 'admin@admin.com' && password == '12345678') {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
 

@@ -7,6 +7,7 @@ import 'package:simrs/widgets/custom_bottom_nav_bar.dart';
 import 'package:simrs/beranda.dart';
 import 'package:simrs/halaman_pendaftaran.dart';
 import 'package:simrs/halaman_layanan.dart';
+import 'package:simrs/tambah_pasien_page.dart'; // Import halaman tambah pasien
 
 class HalamanPasien extends StatefulWidget {
   const HalamanPasien({super.key});
@@ -83,12 +84,14 @@ class _HalamanPasienState extends State<HalamanPasien> {
                 ElevatedButton.icon(
                   onPressed: () {
                     // Aksi ketika tombol "Tambah" diklik di halaman Pasien
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Tombol Tambah Pasien diklik!'),
+                    // Cek mounted sebelum menggunakan context setelah async gap
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TambahPasienPage(),
                       ),
                     );
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const FormTambahPasien()));
                   },
                   icon: const Icon(Icons.add, size: 24),
                   label: const Text('Tambah', style: TextStyle(fontSize: 16)),
