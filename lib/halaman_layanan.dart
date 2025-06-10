@@ -162,7 +162,6 @@ class _HalamanLayananState extends State<HalamanLayanan> {
 
   // --- Widget Khusus untuk Konten Tab Poli ---
   Widget _buildPoliTabContent(List<Map<String, dynamic>> data) {
-    const Color biruUtama = Color(0xFF2E9AFE);
     return Column(
       children: [
         Padding(
